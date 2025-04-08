@@ -56,7 +56,7 @@
           <th>Username</th>
           <th>Measured (mm)</th>
           <th>Magnification</th>
-          <th>Actual Size ({{ selected_unit }})</th>
+          <th>Actual Size</th>
         </tr>
         {% for record in records %}
         <tr>
@@ -67,7 +67,7 @@
             {{
               ((record[1] / record[2]) *
               conversion_factors[selected_unit]) | round(4)
-            }}
+            }} {{ record[3] }}
           </td>
         </tr>
         {% endfor %}

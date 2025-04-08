@@ -26,7 +26,8 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
             measured_size REAL NOT NULL,
-            magnification REAL NOT NULL
+            magnification REAL NOT NULL,
+            unit TEXT
         )
     """)
     conn.commit()
@@ -38,7 +39,7 @@ def convert_size(measured, magnification, unit):
 def get_all_records():
     conn = sqlite3.connect("specimen_data.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT username, measured_size, magnification FROM specimen_records")
+    cursor.execute("SELECT username, measured_size, magnification, unit FROM specimen_records")
     records = cursor.fetchall()
     conn.close()
     return records
@@ -62,9 +63,9 @@ def index():
             conn = sqlite3.connect("specimen_data.db")
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO specimen_records (username, measured_size, magnification)
-                VALUES (?, ?, ?)
-            """, (username, measured, magnification))
+                INSERT INTO specimen_records (username, measured_size, magnification, unit)
+                VALUES (?, ?, ?, ?)
+            """, (username, measured, magnification, target_unit))
             conn.commit()
             conn.close()
 
