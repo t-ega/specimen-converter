@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Specimen Size Converter</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Specimen Size Converter</h1>
+
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash">{{ messages[0] }}</div>
+      {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required />
+
+        <label for="measured_size">Measured Size (mm):</label>
+        <input type="number" step="any" name="measured_size" required />
+
+        <label for="magnification">Magnification:</label>
+        <input type="number" step="any" name="magnification" required />
+
+        <label for="unit">Convert to unit:</label>
+        <select name="unit" required>
+          <option value="nm" {% if selected_unit == 'nm' %}selected{% endif %}>nm</option>
+          <option value="µm" {% if selected_unit == 'µm' %}selected{% endif %}>µm</option>
+          <option value="mm" {% if selected_unit == 'mm' %}selected{% endif %}>mm</option>
+          <option value="cm" {% if selected_unit == 'cm' %}selected{% endif %}>cm</option>
+          <option value="m" {% if selected_unit == 'm' %}selected{% endif %}>m</option>
+        </select>
+
+        <button type="submit">Convert & Save</button>
+      </form>
+
+      {% if result is not none %}
+      <div class="result">
+        <strong>{{ username }}</strong>, the actual size is:
+        <span>{{ result }} {{ selected_unit }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if records %}
+    <div class="history">
+      <h2>History of Records</h2>
+      <table>
+        <tr>
+          <th>Username</th>
+          <th>Measured (mm)</th>
+          <th>Magnification</th>
+          <th>Actual Size ({{ selected_unit }})</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+          <td>{{ record[0] }}</td>
+          <td>{{ record[1] }}</td>
+          <td>{{ record[2] }}</td>
+          <td>
+            {{
+              ((record[1] / record[2]) *
+              conversion_factors[selected_unit]) | round(4)
+            }}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endif %}
+  </body>
+</html>
