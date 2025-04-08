@@ -84,7 +84,8 @@ def index():
         conversion_factors=conversion_factors
     )
 
+
+init_db()
 if __name__ == "__main__":
-    init_db()
     port = os.environ.get('PORT') or 4000
     app.run(debug=True, port=port)
