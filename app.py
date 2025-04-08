@@ -4,7 +4,6 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "secret"
 
-# Conversion dictionary
 conversion_factors = {
     "mm": 1,
     "µm": 1000,
@@ -13,6 +12,20 @@ conversion_factors = {
     "cm": 0.1,
     "m": 0.001
 }
+
+def init_db():
+    conn = sqlite3.connect("specimen_data.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS specimen_records (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            measured_size REAL NOT NULL,
+            magnification REAL NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
 
 def convert_size(measured, magnification, unit):
     return (measured / magnification) * conversion_factors[unit]
@@ -67,4 +80,5 @@ def index():
     )
 
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True)
