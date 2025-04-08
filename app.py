@@ -20,6 +20,7 @@ conversion_factors = {
 def init_db():
     conn = sqlite3.connect("specimen_data.db")
     cursor = conn.cursor()
+    print('Creating table')
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS specimen_records (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
